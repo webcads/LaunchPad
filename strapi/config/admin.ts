@@ -33,6 +33,8 @@ export default ({ env }) => ({
           uid,
           status,
           clientUrl: env("CLIENT_URL"),
+          kind: strapi.getModel(uid).kind,
+          documentId,
         });
 
         const previewURL = `/admin/preview-proxy?${urlSearchParams}`;
