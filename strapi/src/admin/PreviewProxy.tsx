@@ -1,9 +1,29 @@
 import { lazy } from "react";
 import { RouteObject, useSearchParams } from "react-router-dom";
-import { Box, Portal, Typography } from "@strapi/design-system";
+import { Box, Flex, Portal, Typography } from "@strapi/design-system";
+
+const devices = [
+  {
+    name: "iPhone 5",
+    width: 320,
+    height: 568,
+  },
+  {
+    name: "iPad",
+    width: 768,
+    height: 1024,
+  },
+  {
+    name: "MacBook Pro",
+    width: 1440,
+    height: 900,
+  },
+];
 
 const PreviewProxy = () => {
   const [searchParams] = useSearchParams();
+  const { clientUrl, ...params } = Object.fromEntries(searchParams);
+  const previewURL = `${clientUrl}/api/preview?${new URLSearchParams(params).toString()}`;
 
   return (
     <Portal>
@@ -17,12 +37,26 @@ const PreviewProxy = () => {
         zIndex={1000}
         padding={2}
       >
-        <Typography variant="alpha">Preview Proxy</Typography>
-        <pre style={{ fontSize: "14px", whiteSpace: "pre-wrap" }}>
-          <code>
-            {JSON.stringify(Object.fromEntries(searchParams), null, 2)}
-          </code>
-        </pre>
+        <Flex gap={4} overflow="scroll" alignItems="flex-start">
+          {devices.map((device) => (
+            <Box
+              key={device.name}
+              background="neutral200"
+              hasRadius
+              textAlign="center"
+            >
+              <Typography variant="beta">{device.name}</Typography>
+              <Box
+                tag="iframe"
+                src={previewURL}
+                width={device.width + "px"}
+                height={device.height + "px"}
+                display="block"
+                borderWidth={0}
+              />
+            </Box>
+          ))}
+        </Flex>
       </Box>
     </Portal>
   );

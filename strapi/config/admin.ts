@@ -32,6 +32,7 @@ export default ({ env }) => ({
           locale,
           uid,
           status,
+          clientUrl: env("CLIENT_URL"),
         });
 
         const previewURL = `/admin/preview-proxy?${urlSearchParams}`;
