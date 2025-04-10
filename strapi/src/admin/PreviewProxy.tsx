@@ -35,8 +35,9 @@ const PreviewProxy = () => {
   const previewURL = `${clientUrl}/api/preview?${new URLSearchParams(params).toString()}`;
 
   const previousDocument = React.useRef<any>(undefined);
+  const iframe = React.useRef<HTMLIFrameElement>(null);
 
-  const { document, refetch } = useDocument({
+  const { refetch } = useDocument({
     collectionType:
       kind === "collectionType" ? "collection-types" : "single-types",
     model: params.uid,
@@ -47,7 +48,23 @@ const PreviewProxy = () => {
   React.useEffect(() => {
     const handleMessage = async (message) => {
       if (message.data.type === "strapiUpdate") {
-        refetch();
+        const response = await refetch();
+        const document = response.data.data;
+
+        let changedFields: Array<string> = [];
+        if (document != null && previousDocument.current !== document) {
+          // Get the diff of the previous and current document, find the path of changed fields
+          changedFields = Object.keys(document).filter(
+            (key) => document[key] !== previousDocument.current?.[key],
+          );
+        }
+
+        iframe.current?.contentWindow?.postMessage(
+          { ...message.data, changedFields },
+          new URL(iframe.current.src).origin,
+        );
+
+        previousDocument.current = document;
       }
     };
 
@@ -60,16 +77,7 @@ const PreviewProxy = () => {
     };
   }, [refetch]);
 
-  React.useEffect(() => {
-    if (document != null && previousDocument.current !== document) {
-      // Get the diff of the previous and current document, find the path of changed fields
-      const [updatedAt, ...changedFields] = Object.keys(document).filter(
-        (key) => document[key] !== previousDocument.current?.[key],
-      );
-    }
-  }, [document]);
-
-  const [selectedDevice, setSelectedDevice] = React.useState(0);
+  const [selectedDevice, setSelectedDevice] = React.useState(2);
   const device = devices[selectedDevice];
 
   return (
@@ -105,6 +113,7 @@ const PreviewProxy = () => {
           height={device.height}
           display="block"
           borderWidth={0}
+          ref={iframe}
         />
       </Box>
     </Portal>

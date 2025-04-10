@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { strapiImage } from "@/lib/strapi/strapiImage";
 import DynamicZoneManager from "./dynamic-zone/manager";
 import { Article } from "@/types/types";
+import { useEffect, useState } from "react";
+import { FieldWrapper } from "./field-wrapper";
 
 export async function BlogLayout({
   article,
@@ -16,7 +18,6 @@ export async function BlogLayout({
   locale: string;
   children: React.ReactNode;
 }) {
-
   return (
     <Container className="mt-16 lg:mt-32">
       <div className="flex justify-between items-center px-2 py-8">
@@ -54,26 +55,14 @@ export async function BlogLayout({
               ))}
             </div>
             <header className="flex flex-col">
-              <h1 className="mt-8 text-4xl font-bold tracking-tight text-neutral-200 sm:text-5xl ">
-                {article.title}
-              </h1>
+              <FieldWrapper fieldName="title">
+                <h1 className="mt-8 text-4xl font-bold tracking-tight text-neutral-200 sm:text-5xl ">
+                  {article.title}
+                </h1>
+              </FieldWrapper>
             </header>
-            <div className="mt-8 prose prose-sm prose-invert">
-              {children}
-            </div>
+            <div className="mt-8 prose prose-sm prose-invert">{children}</div>
             <div className="flex space-x-2 items-center pt-12 border-t border-neutral-800 mt-12">
-              <div className="flex space-x-2 items-center ">
-                {/* <Image
-                  src={article.authorAvatar}
-                  alt={article.author}
-                  width={20}
-                  height={20}
-                  className="rounded-full h-5 w-5"
-                />
-                <p className="text-sm font-normal text-muted">
-                  {article.author}
-                </p> */}
-              </div>
               <div className="h-5 rounded-lg w-0.5 bg-neutral-700" />
               <time
                 dateTime={article.publishedAt}
@@ -87,7 +76,14 @@ export async function BlogLayout({
           </article>
         </div>
       </div>
-      {article?.dynamic_zone && (<DynamicZoneManager dynamicZone={article?.dynamic_zone} locale={locale} />)}
+      {article?.dynamic_zone && (
+        <FieldWrapper fieldName="dynamic_zone">
+          <DynamicZoneManager
+            dynamicZone={article?.dynamic_zone}
+            locale={locale}
+          />
+        </FieldWrapper>
+      )}
     </Container>
   );
 }

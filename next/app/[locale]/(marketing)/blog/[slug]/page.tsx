@@ -5,6 +5,7 @@ import fetchContentType from "@/lib/strapi/fetchContentType";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import ClientSlugHandler from "../../ClientSlugHandler";
+import { FieldWrapper } from "@/components/field-wrapper";
 
 export default async function SingleArticlePage({
   params,
@@ -17,9 +18,9 @@ export default async function SingleArticlePage({
       filters: {
         slug: params.slug,
         locale: params.locale,
-      }
+      },
     },
-    true,
+    true
   );
 
   if (!article) {
@@ -37,7 +38,9 @@ export default async function SingleArticlePage({
   return (
     <BlogLayout article={article} locale={params.locale}>
       <ClientSlugHandler localizedSlugs={localizedSlugs} />
-      <BlocksRenderer content={article.content} />
+      <FieldWrapper fieldName="content">
+        <BlocksRenderer content={article.content} />
+      </FieldWrapper>
     </BlogLayout>
   );
 }
