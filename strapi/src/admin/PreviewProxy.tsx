@@ -10,6 +10,28 @@ import {
 } from "@strapi/design-system";
 import { unstable_useDocument as useDocument } from "@strapi/strapi/admin";
 
+const ExpoPreview = () => {
+  const qrCodeSrc = React.useMemo(() => {
+    const qrCodeUrl = new URL("https://qr.expo.dev/eas-update");
+    qrCodeUrl.searchParams.append("projectId", "your-project-id");
+    qrCodeUrl.searchParams.append("runtimeVersion", "your-runtime-version");
+    qrCodeUrl.searchParams.append("channel", "your-channel");
+    return qrCodeUrl.toString();
+  }, []);
+
+  return (
+    <Flex
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      height="100%"
+      width="100%"
+    >
+      <img src={qrCodeSrc} alt="Expo QR Code" />
+    </Flex>
+  );
+};
+
 const devices = [
   {
     name: "iPhone 5",
@@ -25,6 +47,9 @@ const devices = [
     name: "Fluid",
     width: "100%",
     height: "100%",
+  },
+  {
+    name: "Native mobile app",
   },
 ];
 
@@ -92,7 +117,7 @@ const PreviewProxy = () => {
         zIndex={4}
         padding={2}
       >
-        <Box display="inline-block" marginBottom={2}>
+        <Box display="inline-block" marginBottom={2} paddingLeft={8}>
           <SingleSelect
             aria-label="Select device"
             placeholder="Select device"
@@ -106,15 +131,19 @@ const PreviewProxy = () => {
             ))}
           </SingleSelect>
         </Box>
-        <Box
-          tag="iframe"
-          src={previewURL}
-          width={device.width}
-          height={device.height}
-          display="block"
-          borderWidth={0}
-          ref={iframe}
-        />
+        {selectedDevice === devices.length - 1 ? (
+          <ExpoPreview />
+        ) : (
+          <Box
+            tag="iframe"
+            src={previewURL}
+            width={device.width}
+            height={device.height}
+            display="block"
+            borderWidth={0}
+            ref={iframe}
+          />
+        )}
       </Box>
     </Portal>
   );
