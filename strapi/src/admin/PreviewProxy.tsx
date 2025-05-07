@@ -18,7 +18,7 @@ const ExpoPreview = () => {
       "4327bdd6-9794-49d7-9b95-6a5198afd339",
     );
     qrCodeUrl.searchParams.append("runtimeVersion", "1.0.0");
-    qrCodeUrl.searchParams.append("channel", "production");
+    qrCodeUrl.searchParams.append("channel", "default");
     return qrCodeUrl.toString();
   }, []);
 
