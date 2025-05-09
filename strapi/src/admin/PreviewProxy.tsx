@@ -68,7 +68,7 @@ const PreviewProxy = () => {
   const { refetch } = useDocument({
     collectionType:
       kind === "collectionType" ? "collection-types" : "single-types",
-    model: params.uid,
+    model: params.model,
     documentId,
     params: { locale: params.locale },
   });

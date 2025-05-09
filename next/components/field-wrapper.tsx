@@ -16,7 +16,7 @@ export const FieldWrapper = ({ children, fieldName }: FieldWrapperProps) => {
       if (
         message.origin === process.env.NEXT_PUBLIC_API_URL &&
         message.data.type === "strapiUpdate" &&
-        message.data.changedFields.includes(fieldName)
+        message.data.changedFields?.includes(fieldName)
       ) {
         setIsAnimating(true);
       }

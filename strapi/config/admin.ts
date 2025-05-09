@@ -1,47 +1,79 @@
-export default ({ env }) => ({
-  auth: {
-    secret: env("ADMIN_JWT_SECRET"),
-  },
-  apiToken: {
-    salt: env("API_TOKEN_SALT"),
-  },
-  transfer: {
-    token: {
-      salt: env("TRANSFER_TOKEN_SALT"),
+const getPreviewPathname = (model, { locale, document }): string | null => {
+  const { slug } = document;
+  const prefix = `/${locale ?? "en"}`;
+
+  switch (model) {
+    case "api::page.page":
+      if (slug === "homepage") {
+        return prefix;
+      }
+      return `${prefix}/${slug}`;
+    case "api::article.article":
+      return `${prefix}/blog/${slug}`;
+    case "api::product.product":
+      return `${prefix}/products/${slug}`;
+    case "api::product-page.product-page":
+      return `${prefix}/products`;
+    case "api::blog-page.blog-page":
+      return `${prefix}/blog`;
+    default:
+      return null;
+  }
+};
+
+export default ({ env }) => {
+  const clientUrl = env("CLIENT_URL");
+
+  return {
+    auth: {
+      secret: env("ADMIN_JWT_SECRET"),
     },
-  },
-  flags: {
-    nps: env.bool("FLAG_NPS", true),
-    promoteEE: env.bool("FLAG_PROMOTE_EE", true),
-  },
-  preview: {
-    enabled: true,
-    config: {
-      allowedOrigins: [env("CLIENT_URL"), "'self'"],
-      async handler(uid, { documentId, locale, status }) {
-        const document = await strapi.documents(uid).findOne({
-          documentId,
-          populate: null,
-          fields: ["slug"],
-        });
-        const { slug } = document;
-
-        const urlSearchParams = new URLSearchParams({
-          secret: env("PREVIEW_SECRET"),
-          ...(slug && { slug }),
-          locale,
-          uid,
-          status,
-          clientUrl: env("CLIENT_URL"),
-          kind: strapi.getModel(uid).kind,
-          documentId,
-        });
-
-        const previewURL = `/admin/preview-proxy?${urlSearchParams}`;
-        // const previewURL = `${env("CLIENT_URL")}/api/preview?${urlSearchParams}`;
-
-        return previewURL;
+    apiToken: {
+      salt: env("API_TOKEN_SALT"),
+    },
+    transfer: {
+      token: {
+        salt: env("TRANSFER_TOKEN_SALT"),
       },
     },
-  },
-});
+    flags: {
+      nps: env.bool("FLAG_NPS", true),
+      promoteEE: env.bool("FLAG_PROMOTE_EE", true),
+    },
+    preview: {
+      enabled: true,
+      config: {
+        allowedOrigins: [clientUrl, "'self'"],
+        async handler(model, { documentId, locale, status }) {
+          const document = await strapi.documents(model).findOne({
+            documentId,
+            fields: ["slug"],
+          });
+
+          const pathname = getPreviewPathname(model, { locale, document });
+
+          // Disable preview if the pathname is not found
+          if (!pathname) {
+            return null;
+          }
+
+          const urlSearchParams = new URLSearchParams({
+            secret: env("PREVIEW_SECRET"),
+            url: pathname,
+            status,
+            documentId,
+            // For highlighting
+            clientUrl,
+            kind: strapi.getModel(model).kind,
+            model,
+            locale,
+          });
+
+          // return `${clientUrl}${pathname}`;
+          // return `${clientUrl}/api/preview?${urlSearchParams}`;
+          return `/admin/preview-proxy?${urlSearchParams}`;
+        },
+      },
+    },
+  };
+};
