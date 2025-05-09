@@ -37,19 +37,19 @@ const ExpoPreview = () => {
 
 const devices = [
   {
-    name: "iPhone 5",
+    name: "Web (full screen)",
+    width: "100%",
+    height: "100%",
+  },
+  {
+    name: "Web (iPhone 5)",
     width: "320px",
     height: "568px",
   },
   {
-    name: "iPad",
+    name: "Web (iPad)",
     width: "768px",
     height: "1024px",
-  },
-  {
-    name: "Fluid",
-    width: "100%",
-    height: "100%",
   },
   {
     name: "Native mobile app",
@@ -105,7 +105,7 @@ const PreviewProxy = () => {
     };
   }, [refetch]);
 
-  const [selectedDevice, setSelectedDevice] = React.useState(2);
+  const [selectedDevice, setSelectedDevice] = React.useState(0);
   const device = devices[selectedDevice];
 
   return (
@@ -118,9 +118,9 @@ const PreviewProxy = () => {
         bottom="0"
         background="neutral100"
         zIndex={4}
-        padding={2}
       >
-        <Box display="inline-block" marginBottom={2} paddingLeft={8}>
+        <Flex gap={4} justifyContent="center" padding={2}>
+          <Typography>Preview on:</Typography>
           <SingleSelect
             aria-label="Select device"
             placeholder="Select device"
@@ -133,7 +133,7 @@ const PreviewProxy = () => {
               </SingleSelectOption>
             ))}
           </SingleSelect>
-        </Box>
+        </Flex>
         {selectedDevice === devices.length - 1 ? (
           <ExpoPreview />
         ) : (
@@ -142,6 +142,8 @@ const PreviewProxy = () => {
             src={previewURL}
             width={device.width}
             height={device.height}
+            marginLeft="auto"
+            marginRight="auto"
             display="block"
             borderWidth={0}
             ref={iframe}
