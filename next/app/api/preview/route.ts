@@ -5,7 +5,7 @@ export const GET = async (request: Request) => {
   // Parse query string parameters
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
-  const url = searchParams.get("url") ?? "/";
+  const pathname = searchParams.get("pathname") ?? "/";
   const status = searchParams.get("status");
 
   // Check the secret and next parameters
@@ -22,5 +22,5 @@ export const GET = async (request: Request) => {
     draftMode().enable();
   }
 
-  redirect(url);
+  redirect(pathname);
 };

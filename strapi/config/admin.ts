@@ -59,7 +59,7 @@ export default ({ env }) => {
 
           const urlSearchParams = new URLSearchParams({
             secret: env("PREVIEW_SECRET"),
-            url: pathname,
+            pathname,
             status,
             documentId,
             // For highlighting
@@ -69,7 +69,6 @@ export default ({ env }) => {
             locale,
           });
 
-          // return `${clientUrl}${pathname}`;
           // return `${clientUrl}/api/preview?${urlSearchParams}`;
           return `/admin/preview-proxy?${urlSearchParams}`;
         },
