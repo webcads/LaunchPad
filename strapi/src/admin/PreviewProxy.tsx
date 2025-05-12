@@ -37,7 +37,7 @@ const PreviewProxy = () => {
           <Typography>Preview on:</Typography>
           <SingleSelect value={selectedDevice.id} onChange={handleDeviceChange}>
             {devices.map((device) => (
-              <SingleSelectOption key={device.name} value={device.id}>
+              <SingleSelectOption key={device.id} value={device.id}>
                 {device.name}
               </SingleSelectOption>
             ))}

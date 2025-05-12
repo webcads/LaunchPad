@@ -10,18 +10,18 @@ export function useDeviceSelector() {
       width: "100%",
       height: "100%",
     },
-    // {
-    //   id: "web-phone" as const,
-    //   name: "Web (iPhone 5)",
-    //   width: "320px",
-    //   height: "568px",
-    // },
-    // {
-    //   id: "web-tablet" as const,
-    //   name: "Web (iPad)",
-    //   width: "768px",
-    //   height: "1024px",
-    // },
+    {
+      id: "web-phone" as const,
+      name: "Web (iPhone 5)",
+      width: "320px",
+      height: "568px",
+    },
+    {
+      id: "web-tablet" as const,
+      name: "Web (iPad)",
+      width: "768px",
+      height: "1024px",
+    },
     {
       id: "native" as const,
       name: "Native mobile app",
