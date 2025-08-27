@@ -19,10 +19,14 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.19.0",
-    "@strapi/plugin-seo": "^2.0.4",
-    "@strapi/plugin-users-permissions": "5.19.0",
-    "@strapi/strapi": "5.19.0",
+    "@strapi/design-system": "^1.19.0",
+    "@strapi/icons": "^1.19.0",
+    "@strapi/plugin-cloud": "^4.25.23",
+    "@strapi/plugin-seo": "^1.9.9",
+    "@strapi/plugin-users-permissions": "^5.23.0",
+    "@strapi/strapi": "^5.23.0",
+    "@strapi/types": "^5.23.0",
+    "@strapi/utils": "^5.23.0",
     "better-sqlite3": "11.7.0",
     "patch-package": "^8.0.0",
     "pluralize": "^8.0.0",
